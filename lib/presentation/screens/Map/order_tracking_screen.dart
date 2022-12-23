@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:peerp_toon/presentation/screens/Map/utils/local_services.dart';
 
 class OrderTrackingScreen extends StatefulWidget {
   const OrderTrackingScreen({Key? key}) : super(key: key);
@@ -15,6 +13,7 @@ class OrderTrackingScreen extends StatefulWidget {
 class OrderTrackingScreenState extends State<OrderTrackingScreen> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
+
   // TextEditingController _searchController = TextEditingController();
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
