@@ -8,7 +8,9 @@ import '../../../app/constants/app.colors.dart';
 import '../../../app/constants/app.keys.dart';
 import '../../../core/notifiers/theme.notifier.dart';
 import '../../../core/notifiers/user.notifier.dart';
-import '../cartScreen/cart.screen.dart';
+
+import '../Map/order_tracking_screen.dart';
+
 import '../productScreen/product.screen.dart';
 import '../profileScreens/mainProfileScreen/profile.screen.dart';
 import '../searchScreen/search.screen.dart';
@@ -28,7 +30,7 @@ final List<SalomonBottomBarItem> bottomNavBarIcons = [
   ),
 
   SalomonBottomBarItem(
-    icon: const Icon(EvaIcons.shoppingCart),
+    icon:  Icon(EvaIcons.map),
     title: const Text("Cart"),
     selectedColor: Colors.teal,
   ),
@@ -43,7 +45,7 @@ final List<SalomonBottomBarItem> bottomNavBarIcons = [
 final screens = [
   const ProductScreen(),
   const SearchScreen(),
-  const CartScreen(),
+  const OrderTrackingScreen(),
   const ProfileScreen(),
 ];
 

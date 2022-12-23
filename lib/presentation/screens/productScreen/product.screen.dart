@@ -1,4 +1,6 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:peerp_toon/presentation/screens/cartScreen/cart.screen.dart';
 import 'package:peerp_toon/presentation/screens/productScreen/widgets/brands.widget.dart';
 import 'package:peerp_toon/presentation/screens/productScreen/widgets/recommended.widget.dart';
 import 'package:provider/provider.dart';
@@ -54,11 +56,14 @@ class ProductScreen extends StatelessWidget {
               ),
               ListTile(
                 leading: const Icon(
-                  Icons.play_circle,
+                  EvaIcons.shoppingCart,
                 ),
-                title: const Text('Course Outline'),
+                title: const Text('Cart'),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const CartScreen()));
                 },
               ),
               ListTile(
