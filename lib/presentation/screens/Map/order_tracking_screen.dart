@@ -67,6 +67,8 @@ class OrderTrackingScreenState extends State<OrderTrackingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
         title: Text("Order Tracking"),
       ),
       body: Column(

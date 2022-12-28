@@ -34,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
             key: AppKeys.userData,
             valueType: ValueType.StringValue,
             actionIfNull: () {
-              Navigator.of(context).pushNamed(AppRouter.loginRoute);
+              Navigator.of(context).pushReplacementNamed(AppRouter.loginRoute);
             },
             actionIfNotNull: () {
               Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);

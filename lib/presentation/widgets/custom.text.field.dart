@@ -7,6 +7,7 @@ class CustomTextField {
   static customTextField(
       {required TextEditingController textEditingController,
       required String hintText,
+      int? maxLength,
       String? Function(String?)? validator,
       Function(String)? onChanged}) {
     return TextFormField(

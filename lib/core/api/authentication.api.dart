@@ -16,7 +16,8 @@ class AuthenticationAPI {
   Future createAccount(
       {required String useremail,
       required String username,
-      required String userpassword}) async {
+      required String userpassword,
+      required String phoneNumber}) async {
     const subUrl = '/auth/signup';
     final Uri uri = Uri.parse(ApiRoutes.baseurl + subUrl);
     final http.Response response = await client.post(uri,
@@ -24,7 +25,8 @@ class AuthenticationAPI {
         body: jsonEncode({
           "useremail": useremail,
           "userpassword": userpassword,
-          "username": username
+          "username": username,
+          "phonenumber": phoneNumber
         }));
     final dynamic body = response.body;
     return body;

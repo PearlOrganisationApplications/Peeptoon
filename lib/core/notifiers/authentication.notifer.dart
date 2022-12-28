@@ -13,9 +13,11 @@ class AuthenticationNotifier with ChangeNotifier {
   final AuthenticationAPI _authenticationAPI = AuthenticationAPI();
 
   String? _passwordLevel = "";
+
   String? get passwordLevel => _passwordLevel;
 
   String? _passwordEmoji = "";
+
   String? get passwordEmoji => _passwordEmoji;
 
   void checkPasswordStrength({required String password}) {
@@ -42,10 +44,14 @@ class AuthenticationNotifier with ChangeNotifier {
       {required String useremail,
       required BuildContext context,
       required String username,
-      required String userpassword}) async {
+      required String userpassword,
+      required String phoneNumber}) async {
     try {
       var userData = await _authenticationAPI.createAccount(
-          useremail: useremail, username: username, userpassword: userpassword);
+          useremail: useremail,
+          username: username,
+          userpassword: userpassword,
+          phoneNumber: phoneNumber);
       print(userData);
 
       final Map<String, dynamic> parseData = await jsonDecode(userData);

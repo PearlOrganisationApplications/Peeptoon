@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cache_manager/cache_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../app/constants/app.colors.dart';
@@ -13,8 +18,36 @@ import '../../../widgets/custom.back.btn.dart';
 import '../../../widgets/custom.text.style.dart';
 import '../../../widgets/dimensions.widget.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  File? image;
+
+  String img = '';
+  final _picker = ImagePicker();
+
+  Future pickImage() async {
+    final pickedImage = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+      maxHeight: 500.0,
+      maxWidth: 500.0,
+    );
+
+    if (pickedImage != null) {
+      setState(() {
+        image = File(pickedImage.path);
+        Uint8List byts = File(pickedImage.path).readAsBytesSync();
+        img = base64Encode(byts);
+        print(img);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -202,15 +235,7 @@ class ProfileScreen extends StatelessWidget {
             height: profilePictureSize,
             child: GestureDetector(
               onTap: () {
-                if (userName == 'Wait') {
-                  SnackUtil.stylishSnackBar(
-                      text: 'Session Timeout', context: context);
-                  Navigator.of(context)
-                      .pushReplacementNamed(AppRouter.loginRoute);
-                  DeleteCache.deleteKey(AppKeys.userData);
-                } else {
-                  Navigator.of(context).pushNamed(AppRouter.accountInfo);
-                }
+                pickImage();
               },
               child: CircleAvatar(
                 backgroundColor:
@@ -219,12 +244,13 @@ class ProfileScreen extends StatelessWidget {
                 child: Hero(
                   tag: 'profilePicture',
                   child: ClipOval(
-                    child: SvgPicture.network(
-                      'https://avatars.dicebear.com/api/big-smile/$userName.svg',
-                      semanticsLabel: 'A shark?!',
-                      alignment: Alignment.center,
-                    ),
-                  ),
+                      child: image == null
+                          ? SvgPicture.network(
+                              'https://avatars.dicebear.com/api/big-smile/$userName.svg',
+                              semanticsLabel: 'A shark?!',
+                              alignment: Alignment.center,
+                            )
+                          : Image.file(File(image!.path).absolute)),
                 ),
               ),
             ),
