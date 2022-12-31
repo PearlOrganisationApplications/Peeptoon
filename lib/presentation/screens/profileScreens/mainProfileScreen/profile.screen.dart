@@ -4,9 +4,10 @@ import 'dart:typed_data';
 
 import 'package:cache_manager/cache_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../app/constants/app.colors.dart';
 import '../../../../app/constants/app.keys.dart';
@@ -27,10 +28,10 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   File? image;
-
   String img = '';
   final _picker = ImagePicker();
 
+  //***  Image Picker Function
   Future pickImage() async {
     final pickedImage = await _picker.pickImage(
       source: ImageSource.gallery,
@@ -38,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       maxHeight: 500.0,
       maxWidth: 500.0,
     );
-
+//*** Condition For Image
     if (pickedImage != null) {
       setState(() {
         image = File(pickedImage.path);
@@ -237,21 +238,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: () {
                 pickImage();
               },
-              child: CircleAvatar(
-                backgroundColor:
-                    themeFlag ? AppColors.creamColor : AppColors.mirage,
-                radius: profilePictureSize - 4,
-                child: Hero(
-                  tag: 'profilePicture',
-                  child: ClipOval(
-                      child: image == null
-                          ? SvgPicture.network(
-                              'https://avatars.dicebear.com/api/big-smile/$userName.svg',
-                              semanticsLabel: 'A shark?!',
-                              alignment: Alignment.center,
-                            )
-                          : Image.file(File(image!.path).absolute)),
-                ),
+              child: Hero(
+                tag: 'profilePicture',
+                child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: image != null
+                        ? CircleAvatar(
+                            backgroundImage:
+                                FileImage((File(image!.path).absolute
+                                    // fit: BoxFit.fill,
+                                    )),
+                            // child: Image.file(
+                            //   File(image!.path).absolute,
+                            //   fit: BoxFit.cover,
+                            // ),
+                          )
+                        : Container(
+                            child: Center(
+                            child: Lottie.asset(
+                                "assets/animations/uploadimg.json"),
+                          )
+                            // Lottie.file("assets/animations/uploadimg.json"),
+                            )),
               ),
             ),
           ),
@@ -314,5 +325,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
+  }
+
+  //*** Save Image in Share Preferences
+
+  void savedImg(path) async {
+    SharedPreferences savePref = await SharedPreferences.getInstance();
+    savePref.setString("savePath", path);
+  }
+
+  void loadImg() async {
+    SharedPreferences savedPref = await SharedPreferences.getInstance();
+    setState(() {
+      img = savedPref.getString("savePath")!;
+    });
   }
 }
