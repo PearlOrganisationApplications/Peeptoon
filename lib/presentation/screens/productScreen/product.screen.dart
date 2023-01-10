@@ -32,21 +32,23 @@ class ProductScreen extends StatelessWidget {
           elevation: 0.0,
           backgroundColor: themeFlag ? AppColors.mirage : AppColors.creamColor,
           iconTheme: IconThemeData(
-            color: themeFlag ? AppColors.creamColor : AppColors.mirage
-          ),
+              color: themeFlag ? AppColors.creamColor : AppColors.mirage),
         ),
         drawer: Drawer(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(20),
+                  bottomRight: Radius.circular(20))),
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
               const DrawerHeader(
                 decoration: BoxDecoration(color: Colors.black38),
-                child: Text("Peeptoon"
-                ),
+                child: Text("Peeptoon"),
               ),
               ListTile(
                 leading: const Icon(Icons.account_circle_rounded),
-                title: const Text(' Profile '),
+                title: const Text('Profile '),
                 onTap: () {
                   Navigator.push(
                       context,
