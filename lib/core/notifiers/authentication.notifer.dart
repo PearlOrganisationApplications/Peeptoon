@@ -40,23 +40,27 @@ class AuthenticationNotifier with ChangeNotifier {
     }
   }
 
+  ///*** Create a notifier for to sign up "We have to Pass the parameter which we're required "
   Future createAccount(
       {required String useremail,
       required BuildContext context,
       required String username,
       required String userpassword,
+      required String userConfirmPassword,
       required String phoneNumber}) async {
     try {
       var userData = await _authenticationAPI.createAccount(
-          useremail: useremail,
-          username: username,
-          userpassword: userpassword,
-          phoneNumber: phoneNumber);
+        useremail: useremail,
+        username: username,
+        userpassword: userpassword,
+        phoneNumber: phoneNumber,
+        userConfirmPassword: userConfirmPassword,
+      );
       print(userData);
 
       final Map<String, dynamic> parseData = await jsonDecode(userData);
-      bool isAuthenticated = parseData['authentication'];
-      dynamic authData = parseData['data'];
+      bool isAuthenticated = parseData['status'];
+      dynamic authData = parseData['token'];
 
       if (isAuthenticated) {
         WriteCache.setString(key: AppKeys.userData, value: authData)
@@ -64,12 +68,12 @@ class AuthenticationNotifier with ChangeNotifier {
           () => Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackUtil.stylishSnackBar(text: authData, context: context));
+        ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
+            text: "User already Exist", context: context));
       }
     } on SocketException catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
-          text: 'Oops No You Need A Good Internet Connection',
+          text: 'Oops No! You Need A Good Internet Connection',
           context: context));
     } catch (e) {
       print(e);
@@ -79,24 +83,29 @@ class AuthenticationNotifier with ChangeNotifier {
   Future userLogin(
       {required String useremail,
       required BuildContext context,
+      required String usercontact,
       required String userpassword}) async {
     try {
       var userData = await _authenticationAPI.userLogin(
-          useremail: useremail, userpassword: userpassword);
+          useremail: useremail,
+          userpassword: userpassword,
+          usercontact: usercontact);
       print(userData);
 
       final Map<String, dynamic> parseData = await jsonDecode(userData);
-      bool isAuthenticated = parseData['authentication'];
-      dynamic authData = parseData['data'];
+      bool isAuthenticated = parseData['status'];
+      dynamic authData = parseData['token'];
 
       if (isAuthenticated) {
         WriteCache.setString(key: AppKeys.userData, value: authData)
-            .whenComplete(
-          () => Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute),
-        );
+            .whenComplete(() {
+          ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
+              text: "Login Successfully", context: context));
+          Navigator.of(context).pushReplacementNamed(AppRouter.homeRoute);
+        });
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackUtil.stylishSnackBar(text: authData, context: context));
+        ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
+            text: "Invail Username or Password", context: context));
       }
     } on SocketException catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(

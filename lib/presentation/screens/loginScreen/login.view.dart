@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:peerp_toon/presentation/screens/homeScreen/home.screen.dart';
+
 import 'package:peerp_toon/presentation/screens/loginScreen/widget/welcome.login.widget.dart';
 import 'package:provider/provider.dart';
 
@@ -9,10 +9,20 @@ import '../../../core/notifiers/authentication.notifer.dart';
 import '../../../core/notifiers/theme.notifier.dart';
 import '../../widgets/custom.text.field.dart';
 import '../../widgets/dimensions.widget.dart';
+import '../homeScreen/home.screen.dart';
+
+// bool isEmail(String input) => EmailValidator.validate(input);
+//
+// bool isPhone(String input) =>
+//     RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$')
+//         .hasMatch(input);
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
-  final TextEditingController userEmailController = TextEditingController();
+
+  // final TextEditingController userPhoneController = TextEditingController();
+  final TextEditingController userEmailPhoneController =
+      TextEditingController();
   final TextEditingController userPassController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -23,9 +33,11 @@ class LoginScreen extends StatelessWidget {
         var authNotifier =
             Provider.of<AuthenticationNotifier>(context, listen: false);
         authNotifier.userLogin(
-            context: context,
-            useremail: userEmailController.text,
-            userpassword: userPassController.text);
+          context: context,
+          useremail: userEmailPhoneController.text,
+          userpassword: userPassController.text,
+          usercontact: userEmailPhoneController.text,
+        );
       }
     }
 
@@ -54,12 +66,12 @@ class LoginScreen extends StatelessWidget {
                           padding:
                               const EdgeInsets.fromLTRB(35.0, 0.0, 35.0, 2.0),
                           child: CustomTextField.customTextField(
-                            textEditingController: userEmailController,
-                            hintText: 'Enter an email',
+                            textEditingController: userEmailPhoneController,
+                            hintText: 'Enter an email/Number',
                             validator: (val) =>
                                 !RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
                                         .hasMatch(val!)
-                                    ? 'Enter an email'
+                                    ? 'Enter an email/Number'
                                     : null,
                           ),
                         ),
@@ -85,8 +97,11 @@ class LoginScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     onPressed: () async {
-                      // _userLogin();
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> HomeScreen()));
+                      _userLogin();
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => HomeScreen()));
                     },
                     color: AppColors.rawSienna,
                     child: const Text(

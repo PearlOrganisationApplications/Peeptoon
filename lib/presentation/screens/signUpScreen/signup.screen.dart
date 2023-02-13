@@ -34,6 +34,7 @@ class SignUpScreen extends StatelessWidget {
           username: userNameController.text,
           userpassword: userPassController.text,
           phoneNumber: phoneNumberController.text,
+          userConfirmPassword: userPassController.text,
         );
       }
     }
@@ -83,15 +84,16 @@ class SignUpScreen extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(
                                 35.0, 10.0, 35.0, 2.0),
                             child: CustomTextField.customTextField(
-                                onChanged: (val) {
-                                  authNotifier(false)
-                                      .checkPasswordStrength(password: val);
-                                },
+                                // onChanged: (val) {
+                                //   authNotifier(false)
+                                //       .checkPasswordStrength(password: val);
+                                // },
                                 textEditingController: phoneNumberController,
                                 hintText: 'Enter a Phone number',
                                 maxLength: 10,
                                 validator: (value) {
-                                  String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+                                  String patttern =
+                                      r'(^(?:[+0]9)?[0-9]{10,12}$)';
                                   RegExp regExp = new RegExp(patttern);
                                   if (value?.length == 0) {
                                     return 'Please enter mobile number';
@@ -109,14 +111,28 @@ class SignUpScreen extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(
                                 35.0, 10.0, 35.0, 2.0),
                             child: CustomTextField.customTextField(
-                              onChanged: (val) {
-                                authNotifier(false)
-                                    .checkPasswordStrength(password: val);
-                              },
+                              // onChanged: (val) {
+                              //   authNotifier(false)
+                              //       .checkPasswordStrength(password: val);
+                              // },
                               textEditingController: userPassController,
                               hintText: 'Enter a Password',
                               validator: (val) =>
                                   val!.isEmpty ? 'Enter a password' : null,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                35.0, 10.0, 35.0, 2.0),
+                            child: CustomTextField.customTextField(
+                              // onChanged: (val) {
+                              //   authNotifier(false)
+                              //       .checkPasswordStrength(password: val);
+                              // },
+                              textEditingController: userPassController,
+                              hintText: 'Confirm Password',
+                              validator: (val) =>
+                                  val!.isEmpty ? 'Confirm password' : null,
                             ),
                           ),
                         ],
@@ -213,5 +229,5 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  // String? validateMobile(String value)
+// String? validateMobile(String value)
 }
