@@ -12,7 +12,7 @@ class AuthenticationAPI {
     'Access-Control-Allow-Origin': "*",
   };
 
-//*** User Sign Up
+  ///*** Function For  User Sign Up
   Future createAccount(
       {required String useremail,
       required String username,
@@ -50,6 +50,46 @@ class AuthenticationAPI {
         }));
     final dynamic body = response.body;
     print("Account Create =======> $body");
+    return body;
+  }
+
+  ///****** Function For Forgot Password.
+  Future forgotPassword({
+    required String email,
+  }) async {
+    const subUrl = '/peeptoon/public/api/forgot_password';
+    final Uri uri = Uri.parse(ApiRoutes.baseurl + subUrl);
+    final http.Response response = await client.post(uri,
+        headers: headers, body: jsonEncode({"email": email}));
+    final dynamic body = response.body;
+    print("Password Sended To =========> $body");
+    return body;
+  }
+
+  ///***** Function For Verify The OTP.
+  Future getOTPVerified({
+    required String otp,
+  }) async {
+    const subUrl = '/peeptoon/public/api/verifyOtp';
+    final Uri uri = Uri.parse(ApiRoutes.baseurl + subUrl);
+    final http.Response response = await  client.post(uri,
+        headers: headers, body: jsonEncode(<String,String>{"otp": otp}));
+    final dynamic body = response.body;
+    print("Verification Completed =======> $body");
+    return body;
+  }
+
+  ///**** Function For Change Password
+
+  Future getChangePassword(
+      {required String password, required String token}) async {
+    const subUrl = '/peeptoon/public/api/change-password';
+    final Uri uri = Uri.parse(ApiRoutes.baseurl + subUrl);
+    final http.Response response = await client.post(uri,
+        headers: headers,
+        body: jsonEncode({"password": password, "token": token}));
+    final dynamic body = response.body;
+    print("Password Updated =========> $body");
     return body;
   }
 }

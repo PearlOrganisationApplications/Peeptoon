@@ -144,4 +144,14 @@ class UserNotifier with ChangeNotifier {
       );
     }
   }
+/*//   Future verifiedOTPToken({
+//     required String otp,
+//     required BuildContext context
+// })async{
+//     try{
+//       var verifiedToken = await _userAPI.
+//
+//     }
+//   }*/
+
 }

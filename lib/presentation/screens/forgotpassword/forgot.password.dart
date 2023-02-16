@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:peerp_toon/presentation/screens/forgotpassword/Widgets/forgot.password.widget.dart';
 
 import 'package:peerp_toon/presentation/screens/loginScreen/widget/welcome.login.widget.dart';
 import 'package:provider/provider.dart';
@@ -17,26 +18,24 @@ import '../homeScreen/home.screen.dart';
 //     RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$')
 //         .hasMatch(input);
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
+class ForgotPasswordScreen extends StatelessWidget {
+  ForgotPasswordScreen({Key? key}) : super(key: key);
 
   // final TextEditingController userPhoneController = TextEditingController();
-  final TextEditingController userEmailPhoneController =
+  final TextEditingController userForgotPassEmailController =
       TextEditingController();
-  final TextEditingController userPassController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    _userLogin() {
+    _sendOTPForForgotPassword() {
       if (_formKey.currentState!.validate()) {
         var authNotifier =
             Provider.of<AuthenticationNotifier>(context, listen: false);
-        authNotifier.userLogin(
+        authNotifier.forgotPassword(
           context: context,
-          useremail: userEmailPhoneController.text,
-          userpassword: userPassController.text,
-          usercontact: userEmailPhoneController.text,
+          email: userForgotPassEmailController.text,
         );
       }
     }
@@ -51,7 +50,7 @@ class LoginScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            welcomeTextLogin(themeFlag: themeFlag),
+            forgotPasswordTextLogin(themeFlag: themeFlag),
             vSizedBox2,
             Center(
               child: Column(
@@ -66,26 +65,16 @@ class LoginScreen extends StatelessWidget {
                           padding:
                               const EdgeInsets.fromLTRB(35.0, 0.0, 35.0, 2.0),
                           child: CustomTextField.customTextField(
-                            textEditingController: userEmailPhoneController,
-                            hintText: 'Enter an email/number',
+                            textEditingController:
+                                userForgotPassEmailController,
+                            hintText: 'Enter an email',
                             validator: (val) =>
                                 !RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
                                         .hasMatch(val!)
-                                    ? 'Enter an email/number'
+                                    ? 'Enter an email'
                                     : null,
                           ),
                         ),
-                        vSizedBox1,
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(35.0, 0.0, 35.0, 2.0),
-                          child: CustomTextField.customTextField(
-                            textEditingController: userPassController,
-                            hintText: 'Enter a password',
-                            validator: (val) =>
-                                val!.isEmpty ? 'Enter a password' : null,
-                          ),
-                        )
                       ],
                     ),
                   ),
@@ -97,7 +86,7 @@ class LoginScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     onPressed: () async {
-                      _userLogin();
+                      _sendOTPForForgotPassword();
                       // Navigator.push(
                       //     context,
                       //     MaterialPageRoute(
@@ -105,68 +94,16 @@ class LoginScreen extends StatelessWidget {
                     },
                     color: AppColors.rawSienna,
                     child: const Text(
-                      'LOGIN',
+                      'SUBMIT',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
-            ),
-            vSizedBox2,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Not Having A Account? ",
-                  style: TextStyle(
-                    color: themeFlag ? AppColors.creamColor : AppColors.mirage,
-                    fontSize: 14.0,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () =>
-                      Navigator.of(context).pushNamed(AppRouter.signUpRoute),
-                  child: Text(
-                    "Sign up",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color:
-                          themeFlag ? AppColors.creamColor : AppColors.mirage,
-                      fontSize: 14.0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            vSizedBox2,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Forgot Password ? ",
-                  style: TextStyle(
-                    color: themeFlag ? AppColors.creamColor : AppColors.mirage,
-                    fontSize: 14.0,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () =>
-                      Navigator.of(context).pushNamed(AppRouter.forgotPassword),
-                  child: Text(
-                    "Forgot",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color:
-                          themeFlag ? AppColors.creamColor : AppColors.mirage,
-                      fontSize: 14.0,
-                    ),
-                  ),
-                ),
-              ],
             ),
           ],
         ),

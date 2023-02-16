@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-
-import 'package:peerp_toon/presentation/screens/loginScreen/widget/welcome.login.widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../../app/constants/app.colors.dart';
-import '../../../app/routes/app.routes.dart';
 import '../../../core/notifiers/authentication.notifer.dart';
 import '../../../core/notifiers/theme.notifier.dart';
 import '../../widgets/custom.text.field.dart';
 import '../../widgets/dimensions.widget.dart';
-import '../homeScreen/home.screen.dart';
+import 'Widgets/reset.password.widget.dart';
 
 // bool isEmail(String input) => EmailValidator.validate(input);
 //
@@ -17,26 +14,43 @@ import '../homeScreen/home.screen.dart';
 //     RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$')
 //         .hasMatch(input);
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
+class ResetPasswordScreen extends StatefulWidget {
+  ResetPasswordScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+}
+
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+  String token = '';
 
   // final TextEditingController userPhoneController = TextEditingController();
   final TextEditingController userEmailPhoneController =
       TextEditingController();
-  final TextEditingController userPassController = TextEditingController();
+
+  final TextEditingController changePassController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
+  // @override
+  // void initState() {
+  //   final userTokenVerified = Provider.of<UserNotifier>( context,listen: false);
+  //   ReadCache.getString(key: AppKeys.userVerifiedToken).then(
+  //         (token) =>
+  //     {userTokenVerified.getUserData(context: context, token: token)},
+  //   );
+  //   super.initState();
+  // }
   @override
   Widget build(BuildContext context) {
-    _userLogin() {
+    _resetPassword({required String token}) {
       if (_formKey.currentState!.validate()) {
         var authNotifier =
             Provider.of<AuthenticationNotifier>(context, listen: false);
-        authNotifier.userLogin(
+        authNotifier.passwordReset(
           context: context,
-          useremail: userEmailPhoneController.text,
-          userpassword: userPassController.text,
-          usercontact: userEmailPhoneController.text,
+          password: 'password',
+
         );
       }
     }
@@ -51,7 +65,7 @@ class LoginScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            welcomeTextLogin(themeFlag: themeFlag),
+            changePasswordTextField(themeFlag: themeFlag),
             vSizedBox2,
             Center(
               child: Column(
@@ -62,17 +76,27 @@ class LoginScreen extends StatelessWidget {
                     key: _formKey,
                     child: Column(
                       children: [
+                        // Padding(
+                        //   padding:
+                        //   const EdgeInsets.fromLTRB(35.0, 0.0, 35.0, 2.0),
+                        //   child: CustomTextField.customTextField(
+                        //     textEditingController: userEmailPhoneController,
+                        //     hintText: 'Enter an email/number',
+                        //     validator: (val) =>
+                        //     !RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
+                        //         .hasMatch(val!)
+                        //         ? 'Enter an email/number'
+                        //         : null,
+                        //   ),
+                        // ),
                         Padding(
                           padding:
                               const EdgeInsets.fromLTRB(35.0, 0.0, 35.0, 2.0),
                           child: CustomTextField.customTextField(
-                            textEditingController: userEmailPhoneController,
-                            hintText: 'Enter an email/number',
+                            textEditingController: changePassController,
+                            hintText: 'Enter a password',
                             validator: (val) =>
-                                !RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-                                        .hasMatch(val!)
-                                    ? 'Enter an email/number'
-                                    : null,
+                                val!.isEmpty ? 'Enter a password' : null,
                           ),
                         ),
                         vSizedBox1,
@@ -80,12 +104,12 @@ class LoginScreen extends StatelessWidget {
                           padding:
                               const EdgeInsets.fromLTRB(35.0, 0.0, 35.0, 2.0),
                           child: CustomTextField.customTextField(
-                            textEditingController: userPassController,
-                            hintText: 'Enter a password',
+                            textEditingController: changePassController,
+                            hintText: 'Re-Enter a password',
                             validator: (val) =>
-                                val!.isEmpty ? 'Enter a password' : null,
+                                val!.isEmpty ? 'Re-Enter a password' : null,
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -97,7 +121,8 @@ class LoginScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     onPressed: () async {
-                      _userLogin();
+                      _resetPassword(token: token);
+                      widget.key;
                       // Navigator.push(
                       //     context,
                       //     MaterialPageRoute(
@@ -105,7 +130,7 @@ class LoginScreen extends StatelessWidget {
                     },
                     color: AppColors.rawSienna,
                     child: const Text(
-                      'LOGIN',
+                      'SUBMIT',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 17,
@@ -115,58 +140,6 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-            vSizedBox2,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Not Having A Account? ",
-                  style: TextStyle(
-                    color: themeFlag ? AppColors.creamColor : AppColors.mirage,
-                    fontSize: 14.0,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () =>
-                      Navigator.of(context).pushNamed(AppRouter.signUpRoute),
-                  child: Text(
-                    "Sign up",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color:
-                          themeFlag ? AppColors.creamColor : AppColors.mirage,
-                      fontSize: 14.0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            vSizedBox2,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Forgot Password ? ",
-                  style: TextStyle(
-                    color: themeFlag ? AppColors.creamColor : AppColors.mirage,
-                    fontSize: 14.0,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () =>
-                      Navigator.of(context).pushNamed(AppRouter.forgotPassword),
-                  child: Text(
-                    "Forgot",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color:
-                          themeFlag ? AppColors.creamColor : AppColors.mirage,
-                      fontSize: 14.0,
-                    ),
-                  ),
-                ),
-              ],
             ),
           ],
         ),

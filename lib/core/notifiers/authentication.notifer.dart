@@ -115,4 +115,89 @@ class AuthenticationNotifier with ChangeNotifier {
       print(e);
     }
   }
+
+  Future forgotPassword(
+      {required String email, required BuildContext context}) async {
+    try {
+      var userData = await _authenticationAPI.forgotPassword(email: email);
+      print(userData);
+      final Map<String, dynamic> parseData = jsonDecode(userData);
+      bool isAuthenticated = parseData['status'];
+      dynamic authData = ['message'];
+      if (isAuthenticated) {}
+      //   WriteCache.setString(key: "OTP SENDED SUCCESSFULLY", value: authData)
+      //       .whenComplete(() {
+      //
+      // }
+      ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
+          text: "OTP SEND TO YOUR MAIL", context: context));
+      Navigator.of(context).pushReplacementNamed(AppRouter.otpVerification);
+    } on SocketException catch (_) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
+          text: 'Oops No You Need A Good Internet Connection',
+          context: context));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future verifyOTP({required String otp, required BuildContext context}) async {
+    try {
+      var userOTP = await _authenticationAPI.getOTPVerified(otp: otp);
+      print(userOTP);
+      final Map<String, dynamic> parseData = jsonDecode(userOTP.toString());
+      bool isAuthenticated = parseData['status'];
+      dynamic authData = ['token'];
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackUtil.stylishSnackBar(text: "OTP VERIFIED", context: context));
+      Navigator.of(context).pushReplacementNamed(AppRouter.resetPass);
+
+      // if (isAuthenticated) {
+      //   WriteCache.setString(key: AppKeys.userVerifiedToken, value: authData)
+      //       .whenComplete(() {
+      //
+      //   });
+      // } else {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //       SnackUtil.stylishSnackBar(text: "Invail OTP", context: context));
+      // }
+    } on SocketException catch (_) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
+          text: 'Oops No You Need A Good Internet Connection',
+          context: context));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future passwordReset({
+    required String password,
+    required BuildContext context,
+  }) async {
+    try {
+      var userPassUpdate = await _authenticationAPI.getChangePassword(
+          password: password, token: '');
+      //         ReadCache.getString(key: AppKeys.userVerifiedToken).toString());
+      // print(userPassUpdate);
+
+      final Map<String, dynamic> parseData = jsonDecode(userPassUpdate);
+      bool isAuthenticated = parseData['status'];
+      ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
+          text: "Password Updated", context: context));
+      Navigator.of(context).pushReplacementNamed(AppRouter.loginRoute);
+      // dynamic authData = parseData['token'];
+      // if (isAuthenticated) {
+      //   ReadCache.getString(key: AppKeys.userVerifiedToken).whenComplete(() {
+      //
+      //   });
+
+      // ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
+      //     text: "Password Updated", context: context));
+      // Navigator.of(context).pushReplacementNamed(AppRouter.loginRoute);
+    } on SocketException catch (_) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
+          text: 'Oops No You Need A Good Internet Connection',
+          context: context));
+    }
+  }
 }
