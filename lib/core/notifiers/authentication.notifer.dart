@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cache_manager/cache_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../app/constants/app.keys.dart';
 import '../../app/routes/app.routes.dart';
@@ -83,13 +84,14 @@ class AuthenticationNotifier with ChangeNotifier {
   Future userLogin(
       {required String useremail,
       required BuildContext context,
-      required String usercontact,
+      // required String usercontact,
       required String userpassword}) async {
     try {
       var userData = await _authenticationAPI.userLogin(
-          useremail: useremail,
-          userpassword: userpassword,
-          usercontact: usercontact);
+        useremail: useremail,
+        userpassword: userpassword,
+        // usercontact: usercontact
+      );
       print(userData);
 
       final Map<String, dynamic> parseData = await jsonDecode(userData);
@@ -141,26 +143,28 @@ class AuthenticationNotifier with ChangeNotifier {
     }
   }
 
+  ///**** Verified OTP Throught Token That We Got After Verification of OTP  & Store the Token in SharePrefrences
   Future verifyOTP({required String otp, required BuildContext context}) async {
     try {
       var userOTP = await _authenticationAPI.getOTPVerified(otp: otp);
       print(userOTP);
-      final Map<String, dynamic> parseData = jsonDecode(userOTP.toString());
+      final Map<String, dynamic> parseData = jsonDecode(userOTP);
       bool isAuthenticated = parseData['status'];
-      dynamic authData = ['token'];
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackUtil.stylishSnackBar(text: "OTP VERIFIED", context: context));
-      Navigator.of(context).pushReplacementNamed(AppRouter.resetPass);
+      dynamic authData = parseData['token'];
 
-      // if (isAuthenticated) {
-      //   WriteCache.setString(key: AppKeys.userVerifiedToken, value: authData)
-      //       .whenComplete(() {
-      //
-      //   });
-      // } else {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //       SnackUtil.stylishSnackBar(text: "Invail OTP", context: context));
-      // }
+      if (isAuthenticated) {
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        preferences
+            .setString(AppKeys.userVerifiedToken, authData)
+            .whenComplete(() {
+          ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
+              text: "OTP VERIFIED", context: context));
+          Navigator.of(context).pushReplacementNamed(AppRouter.resetPass);
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackUtil.stylishSnackBar(text: "Invail OTP", context: context));
+      }
     } on SocketException catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
           text: 'Oops No You Need A Good Internet Connection',
@@ -170,34 +174,40 @@ class AuthenticationNotifier with ChangeNotifier {
     }
   }
 
-  Future passwordReset({
+  ///**** Password Update Notifier With OTP Token We Get. Call Therough Share Prefrences  /
+  Future passwordChange({
     required String password,
+    required String token,
     required BuildContext context,
   }) async {
     try {
-      var userPassUpdate = await _authenticationAPI.getChangePassword(
-          password: password, token: '');
-      //         ReadCache.getString(key: AppKeys.userVerifiedToken).toString());
-      // print(userPassUpdate);
+      var userData = await _authenticationAPI.getChangePassword(
+          password: password, token: token);
+      print(userData);
 
-      final Map<String, dynamic> parseData = jsonDecode(userPassUpdate);
+      final Map<String, dynamic> parseData = await jsonDecode(userData);
+      ///*** Parse Autherntication Status from Api
       bool isAuthenticated = parseData['status'];
-      ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
-          text: "Password Updated", context: context));
-      Navigator.of(context).pushReplacementNamed(AppRouter.loginRoute);
-      // dynamic authData = parseData['token'];
-      // if (isAuthenticated) {
-      //   ReadCache.getString(key: AppKeys.userVerifiedToken).whenComplete(() {
-      //
-      //   });
+      ///*** Pasrse the data[token] from api
+      dynamic authData = parseData['token'];
 
-      // ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
-      //     text: "Password Updated", context: context));
-      // Navigator.of(context).pushReplacementNamed(AppRouter.loginRoute);
+      if (isAuthenticated) {
+        ///****** Get token from sharepreference
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        preferences
+            .setString(AppKeys.userVerifiedToken, authData)
+            .whenComplete(() {
+          ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
+              text: "Password Updated", context: context));
+          Navigator.of(context).pushReplacementNamed(AppRouter.loginRoute);
+        });
+      }
     } on SocketException catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
           text: 'Oops No You Need A Good Internet Connection',
           context: context));
+    } catch (e) {
+      print(e);
     }
   }
 }

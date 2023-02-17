@@ -9,7 +9,6 @@ import '../../../core/notifiers/authentication.notifer.dart';
 import '../../../core/notifiers/theme.notifier.dart';
 import '../../widgets/custom.text.field.dart';
 import '../../widgets/dimensions.widget.dart';
-import '../homeScreen/home.screen.dart';
 
 // bool isEmail(String input) => EmailValidator.validate(input);
 //
@@ -36,7 +35,7 @@ class LoginScreen extends StatelessWidget {
           context: context,
           useremail: userEmailPhoneController.text,
           userpassword: userPassController.text,
-          usercontact: userEmailPhoneController.text,
+          // usercontact: userEmailPhoneController.text,
         );
       }
     }

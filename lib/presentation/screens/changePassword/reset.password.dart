@@ -1,5 +1,8 @@
+import 'package:cache_manager/cache_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:peerp_toon/app/constants/app.keys.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../app/constants/app.colors.dart';
 import '../../../core/notifiers/authentication.notifer.dart';
@@ -22,8 +25,6 @@ class ResetPasswordScreen extends StatefulWidget {
 }
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
-  String token = '';
-
   // final TextEditingController userPhoneController = TextEditingController();
   final TextEditingController userEmailPhoneController =
       TextEditingController();
@@ -43,15 +44,22 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   // }
   @override
   Widget build(BuildContext context) {
-    _resetPassword({required String token}) {
+    _resetPassword() async{
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+    var  token= preferences.getString(AppKeys.userVerifiedToken).toString();
+      print(token);
+
+      // print(userPassUpdate);
       if (_formKey.currentState!.validate()) {
         var authNotifier =
             Provider.of<AuthenticationNotifier>(context, listen: false);
-        authNotifier.passwordReset(
+        authNotifier.passwordChange(
           context: context,
-          password: 'password',
+          password: changePassController.text,
+          token: preferences.getString(AppKeys.userVerifiedToken).toString(),
 
         );
+        // print($)
       }
     }
 
@@ -121,8 +129,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     onPressed: () async {
-                      _resetPassword(token: token);
-                      widget.key;
+                      _resetPassword();
+                      // widget.key;
                       // Navigator.push(
                       //     context,
                       //     MaterialPageRoute(

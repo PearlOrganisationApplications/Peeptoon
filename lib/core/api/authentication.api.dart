@@ -35,21 +35,22 @@ class AuthenticationAPI {
     return body;
   }
 
-  Future userLogin(
-      {required String useremail,
-      required String userpassword,
-      required String usercontact}) async {
+  Future userLogin({
+    required String useremail,
+    required String userpassword,
+    // required String usercontact
+  }) async {
     const subUrl = '/peeptoon/public/api/signin';
     final Uri uri = Uri.parse(ApiRoutes.baseurl + subUrl);
     final http.Response response = await client.post(uri,
         headers: headers,
         body: jsonEncode({
           "email": useremail,
-          "contact_no": usercontact,
+          // "contact_no": usercontact,
           "password": userpassword,
         }));
     final dynamic body = response.body;
-    print("Account Create =======> $body");
+    print("Account Logined =======> $body");
     return body;
   }
 
@@ -70,10 +71,10 @@ class AuthenticationAPI {
   Future getOTPVerified({
     required String otp,
   }) async {
-    const subUrl = '/peeptoon/public/api/verifyOtp';
+    const subUrl = '/peeptoon/public/api/verify-otp';
     final Uri uri = Uri.parse(ApiRoutes.baseurl + subUrl);
-    final http.Response response = await  client.post(uri,
-        headers: headers, body: jsonEncode(<String,String>{"otp": otp}));
+    final http.Response response = await client.post(uri,
+        headers: headers, body: jsonEncode(<String, String>{"otp": otp}));
     final dynamic body = response.body;
     print("Verification Completed =======> $body");
     return body;
@@ -84,10 +85,10 @@ class AuthenticationAPI {
   Future getChangePassword(
       {required String password, required String token}) async {
     const subUrl = '/peeptoon/public/api/change-password';
-    final Uri uri = Uri.parse(ApiRoutes.baseurl + subUrl);
+    final Uri uri = Uri.parse(ApiRoutes.baseurl+subUrl);
     final http.Response response = await client.post(uri,
         headers: headers,
-        body: jsonEncode({"password": password, "token": token}));
+        body: jsonEncode({"token": token, "password": password}));
     final dynamic body = response.body;
     print("Password Updated =========> $body");
     return body;

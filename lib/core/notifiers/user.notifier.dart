@@ -16,15 +16,19 @@ class UserNotifier with ChangeNotifier {
   final UserAPI _userAPI = UserAPI();
 
   String? userEmail = 'Not Available';
+
   String? get getUserEmail => userEmail;
 
   String? userName;
+
   String? get getUserName => userName;
 
   String userAddress = 'Not Available';
+
   String get getuserAddress => userAddress;
 
   String userPhoneNumber = 'Not Available';
+
   String get getuserPhoneNumber => userPhoneNumber;
 
   Future getUserData({
@@ -144,14 +148,4 @@ class UserNotifier with ChangeNotifier {
       );
     }
   }
-/*//   Future verifiedOTPToken({
-//     required String otp,
-//     required BuildContext context
-// })async{
-//     try{
-//       var verifiedToken = await _userAPI.
-//
-//     }
-//   }*/
-
 }

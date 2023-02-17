@@ -4,5 +4,5 @@ class AppKeys {
   static String userVerifiedToken = 'token';
   static String razorKey = 'rzp_test_ImLClDOqMc2kc1';
   static String onBoardDone = 'onBoard';
-  static String google_api_key="AIzaSyDU6Irn61yrq4TvWOvYKdU4gCn74jqbDVI";
+  static String google_api_key = "AIzaSyDU6Irn61yrq4TvWOvYKdU4gCn74jqbDVI";
 }
