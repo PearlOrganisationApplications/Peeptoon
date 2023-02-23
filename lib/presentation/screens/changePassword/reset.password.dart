@@ -1,4 +1,3 @@
-import 'package:cache_manager/cache_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:peerp_toon/app/constants/app.keys.dart';
 import 'package:provider/provider.dart';
@@ -44,9 +43,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   // }
   @override
   Widget build(BuildContext context) {
-    _resetPassword() async{
+    _resetPassword() async {
       SharedPreferences preferences = await SharedPreferences.getInstance();
-    var  token= preferences.getString(AppKeys.userVerifiedToken).toString();
+      var token = preferences.getString(AppKeys.userVerifiedToken).toString();
       print(token);
 
       // print(userPassUpdate);
@@ -57,7 +56,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           context: context,
           password: changePassController.text,
           token: preferences.getString(AppKeys.userVerifiedToken).toString(),
-
         );
         // print($)
       }

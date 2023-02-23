@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../../../../app/constants/app.colors.dart';
 import '../../../../core/models/cart.model.dart';
 import '../../../../core/notifiers/cart.notifier.dart';
-import '../../../../core/service/payment.service.dart';
 import '../../../../core/utils/snackbar.util.dart';
 
 Widget showCartData({

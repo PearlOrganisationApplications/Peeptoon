@@ -8,7 +8,8 @@ import '../../../app/constants/app.colors.dart';
 import '../../../app/constants/app.keys.dart';
 import '../../../core/notifiers/theme.notifier.dart';
 import '../../../core/notifiers/user.notifier.dart';
-import '../Map/order_tracking_screen.dart';
+
+import '../mapScreen/order_tracking_screen.dart';
 import '../productScreen/product.screen.dart';
 import '../profileScreens/mainProfileScreen/profile.screen.dart';
 import '../searchScreen/search.screen.dart';
@@ -67,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   var _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     ThemeNotifier _themeNotifier = Provider.of<ThemeNotifier>(context);

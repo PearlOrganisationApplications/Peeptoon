@@ -17,7 +17,6 @@ class AccountInformationScreen extends StatelessWidget {
     var themeFlag = _themeNotifier.darkTheme;
     final double profilePictureSize = MediaQuery.of(context).size.width / 3;
     final userNotifier = Provider.of<UserNotifier>(context, listen: false);
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: themeFlag ? AppColors.mirage : AppColors.creamColor,
@@ -28,7 +27,7 @@ class AccountInformationScreen extends StatelessWidget {
               builder: (context, notifier, _) {
                 return FutureBuilder(
                   future: notifier.getUserDetails(
-                      userEmail: userNotifier.userEmail!, context: context),
+                      userEmail: userNotifier.userEmail.toString(), context: context),
                   builder: (context, snapshot) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +60,7 @@ class AccountInformationScreen extends StatelessWidget {
                                 tag: 'profilePicture',
                                 child: ClipOval(
                                   child: SvgPicture.network(
-                                    'https://avatars.dicebear.com/api/big-smile/${userNotifier.getUserName!}.svg',
+                                    'https://avatars.dicebear.com/api/big-smile/${userNotifier.getUserName}.svg',
                                     semanticsLabel: 'A shark?!',
                                     alignment: Alignment.center,
                                   ),
@@ -78,7 +77,7 @@ class AccountInformationScreen extends StatelessWidget {
                           height: 8,
                         ),
                         Text(
-                          notifier.getUserName!,
+                          notifier.getUserName.toString(),
                           style: TextStyle(
                             color: themeFlag
                                 ? AppColors.creamColor

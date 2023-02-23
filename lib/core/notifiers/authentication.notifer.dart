@@ -125,12 +125,8 @@ class AuthenticationNotifier with ChangeNotifier {
       print(userData);
       final Map<String, dynamic> parseData = jsonDecode(userData);
       bool isAuthenticated = parseData['status'];
-      dynamic authData = ['message'];
       if (isAuthenticated) {}
-      //   WriteCache.setString(key: "OTP SENDED SUCCESSFULLY", value: authData)
-      //       .whenComplete(() {
-      //
-      // }
+
       ScaffoldMessenger.of(context).showSnackBar(SnackUtil.stylishSnackBar(
           text: "OTP SEND TO YOUR MAIL", context: context));
       Navigator.of(context).pushReplacementNamed(AppRouter.otpVerification);
@@ -186,8 +182,10 @@ class AuthenticationNotifier with ChangeNotifier {
       print(userData);
 
       final Map<String, dynamic> parseData = await jsonDecode(userData);
+
       ///*** Parse Autherntication Status from Api
       bool isAuthenticated = parseData['status'];
+
       ///*** Pasrse the data[token] from api
       dynamic authData = parseData['token'];
 

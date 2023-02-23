@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:peerp_toon/app/constants/app.keys.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../app/constants/app.colors.dart';
 import '../../../../core/notifiers/theme.notifier.dart';
@@ -13,6 +15,7 @@ import '../../../widgets/dimensions.widget.dart';
 class EditProfileScreen extends StatelessWidget {
   final TextEditingController addressController = TextEditingController();
   final TextEditingController numberController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   EditProfileScreen({Key? key}) : super(key: key);
@@ -24,6 +27,7 @@ class EditProfileScreen extends StatelessWidget {
     UserNotifier userNotifier =
         Provider.of<UserNotifier>(context, listen: false);
     String patttern = r'(^(?:[+0]9)?[0-9]{10,15}$)';
+    String emailPattter = r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$';
     return SafeArea(
       child: Scaffold(
         backgroundColor: themeFlag ? AppColors.mirage : AppColors.creamColor,
@@ -47,6 +51,14 @@ class EditProfileScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     CustomTextField.customTextField(
+                      textEditingController: emailController,
+                      hintText: 'Enter Email',
+                      validator: (val) => !RegExp(emailPattter).hasMatch(val!)
+                          ? 'Enter Email'
+                          : null,
+                    ),
+                    vSizedBox3,
+                    CustomTextField.customTextField(
                       textEditingController: addressController,
                       hintText: 'Enter Address',
                       validator: (val) => val!.isEmpty ? 'Enter Address' : null,
@@ -68,12 +80,20 @@ class EditProfileScreen extends StatelessWidget {
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
+                          SharedPreferences pref =
+                              await SharedPreferences.getInstance();
+                          var token =
+                              pref.getString(AppKeys.userData).toString();
+                          print(token);
                           userNotifier
                               .updateUserDetails(
-                                  userEmail: userNotifier.getUserEmail!,
+                                  userEmail: emailController.text,
                                   userAddress: addressController.text,
                                   userPhoneNo: numberController.text,
-                                  context: context)
+                                  context: context,
+                                  token: pref
+                                      .getString(AppKeys.userData)
+                                      .toString())
                               .then((value) {
                             if (value) {
                               ScaffoldMessenger.of(context).showSnackBar(

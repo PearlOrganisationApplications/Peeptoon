@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:peerp_toon/presentation/screens/forgotpassword/Widgets/forgot.password.widget.dart';
 
-import 'package:peerp_toon/presentation/screens/loginScreen/widget/welcome.login.widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../../app/constants/app.colors.dart';
-import '../../../app/routes/app.routes.dart';
 import '../../../core/notifiers/authentication.notifer.dart';
 import '../../../core/notifiers/theme.notifier.dart';
 import '../../widgets/custom.text.field.dart';
 import '../../widgets/dimensions.widget.dart';
-import '../homeScreen/home.screen.dart';
 
 // bool isEmail(String input) => EmailValidator.validate(input);
 //

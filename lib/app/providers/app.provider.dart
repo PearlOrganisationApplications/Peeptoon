@@ -7,7 +7,6 @@ import '../../core/notifiers/product.notifier.dart';
 import '../../core/notifiers/size.notifier.dart';
 import '../../core/notifiers/theme.notifier.dart';
 import '../../core/notifiers/user.notifier.dart';
-import '../../core/service/payment.service.dart';
 
 class AppProvider {
   static List<SingleChildWidget> providers = [

@@ -14,7 +14,6 @@ import '../../../../app/constants/app.keys.dart';
 import '../../../../app/routes/app.routes.dart';
 import '../../../../core/notifiers/theme.notifier.dart';
 import '../../../../core/notifiers/user.notifier.dart';
-import '../../../../core/utils/snackbar.util.dart';
 import '../../../widgets/custom.back.btn.dart';
 import '../../../widgets/custom.text.style.dart';
 import '../../../widgets/dimensions.widget.dart';
@@ -286,15 +285,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    if (userName == 'Wait') {
-                      SnackUtil.stylishSnackBar(
-                          text: 'Session Timeout', context: context);
-                      Navigator.of(context)
-                          .pushReplacementNamed(AppRouter.loginRoute);
-                      DeleteCache.deleteKey(AppKeys.userData);
-                    } else {
-                      Navigator.of(context).pushNamed(AppRouter.accountInfo);
-                    }
+                    Navigator.of(context).pushNamed(AppRouter.accountInfo);
+                    // if (userName == 'Wait') {
+                    //   SnackUtil.stylishSnackBar(
+                    //       text: 'Session Timeout', context: context);
+                    //   Navigator.of(context)
+                    //       .pushReplacementNamed(AppRouter.loginRoute);
+                    //   DeleteCache.deleteKey(AppKeys.userData);
+                    // } else {
+                    //   Navigator.of(context).pushNamed(AppRouter.accountInfo);
+                    // }
                   },
                   child: Row(
                     children: [
