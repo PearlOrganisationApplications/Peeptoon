@@ -1,13 +1,10 @@
-import 'package:cache_manager/cache_manager.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import '../../../app/constants/app.colors.dart';
-import '../../../app/constants/app.keys.dart';
 import '../../../core/notifiers/theme.notifier.dart';
-import '../../../core/notifiers/user.notifier.dart';
 
 import '../mapScreen/order_tracking_screen.dart';
 import '../productScreen/product.screen.dart';
@@ -56,17 +53,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    final userNotifier = Provider.of<UserNotifier>(context, listen: false);
-    ReadCache.getString(key: AppKeys.userData).then(
-      (token) => {
-        userNotifier.getUserData(context: context, token: token),
-      },
-    );
-    super.initState();
-  }
-
   var _currentIndex = 0;
 
   @override

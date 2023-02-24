@@ -6,14 +6,15 @@ import 'package:cache_manager/cache_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
+import 'package:peerp_toon/core/models/userDetails.model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../app/constants/app.colors.dart';
 import '../../../../app/constants/app.keys.dart';
 import '../../../../app/routes/app.routes.dart';
+import '../../../../core/api/user.api.dart';
 import '../../../../core/notifiers/theme.notifier.dart';
-import '../../../../core/notifiers/user.notifier.dart';
 import '../../../widgets/custom.back.btn.dart';
 import '../../../widgets/custom.text.style.dart';
 import '../../../widgets/dimensions.widget.dart';
@@ -26,6 +27,21 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String token = AppKeys.userData;
+
+  void getInfo() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      token = pref.getString(AppKeys.userData)!;
+    });
+  }
+
+  void initState() {
+    getInfo();
+    UserAPI.getUserUpdateDetaile();
+    super.initState();
+  }
+
   File? image;
   String img = '';
   final _picker = ImagePicker();
@@ -222,108 +238,104 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required BuildContext context,
     required bool themeFlag,
   }) {
-    final userNotifier = Provider.of<UserNotifier>(context, listen: false);
-    var userName = userNotifier.getUserName ?? 'Wait';
+
     final double profilePictureSize = MediaQuery.of(context).size.width / 4;
-    return Container(
-      margin: const EdgeInsets.only(bottom: 14),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: profilePictureSize,
-            height: profilePictureSize,
-            child: GestureDetector(
-              onTap: () {
-                pickImage();
-              },
-              child: Hero(
-                tag: 'profilePicture',
-                child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: image != null
-                        ? CircleAvatar(
-                            backgroundImage:
-                                FileImage((File(image!.path).absolute
-                                    // fit: BoxFit.fill,
-                                    )),
-                            // child: Image.file(
-                            //   File(image!.path).absolute,
-                            //   fit: BoxFit.cover,
-                            // ),
-                          )
-                        : Container(
-                            child: Center(
-                            child: Lottie.asset(
-                                "assets/animations/uploadimg.json"),
-                          )
-                            // Lottie.file("assets/animations/uploadimg.json"),
-                            )),
-              ),
-            ),
-          ),
-          const SizedBox(
-            width: 16,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return FutureBuilder<GetUserUpdateDetaile?>(
+      future: UserAPI.getUserUpdateDetaile(),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.hasData) {
+          return Container(
+            margin: const EdgeInsets.only(bottom: 14),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  userName,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: themeFlag ? AppColors.creamColor : AppColors.mirage,
+                SizedBox(
+                  width: profilePictureSize,
+                  height: profilePictureSize,
+                  child: GestureDetector(
+                    onTap: () {
+                      pickImage();
+                    },
+                    child: Hero(
+                      tag: 'profilePicture',
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: image != null
+                            ? CircleAvatar(
+                                backgroundImage: FileImage(
+                                  (File(image!.path).absolute),
+                                ),
+                              )
+                            : Container(
+                                child: Center(
+                                  child: Lottie.asset(
+                                      "assets/animations/uploadimg.json"),
+                                ),
+                              ),
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushNamed(AppRouter.accountInfo);
-                    // if (userName == 'Wait') {
-                    //   SnackUtil.stylishSnackBar(
-                    //       text: 'Session Timeout', context: context);
-                    //   Navigator.of(context)
-                    //       .pushReplacementNamed(AppRouter.loginRoute);
-                    //   DeleteCache.deleteKey(AppKeys.userData);
-                    // } else {
-                    //   Navigator.of(context).pushNamed(AppRouter.accountInfo);
-                    // }
-                  },
-                  child: Row(
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Account Information',
+                        snapshot.data!.name,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                           color: themeFlag
                               ? AppColors.creamColor
                               : AppColors.mirage,
                         ),
                       ),
                       const SizedBox(
-                        width: 8,
+                        height: 8,
                       ),
-                      Icon(
-                        Icons.chevron_right,
-                        size: 20,
-                        color:
-                            themeFlag ? AppColors.creamColor : AppColors.mirage,
-                      )
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushNamed(AppRouter.accountInfo);
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              'Account Information',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: themeFlag
+                                    ? AppColors.creamColor
+                                    : AppColors.mirage,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Icon(
+                              Icons.chevron_right,
+                              size: 20,
+                              color: themeFlag
+                                  ? AppColors.creamColor
+                                  : AppColors.mirage,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
-          )
-        ],
-      ),
+          );
+        } else {
+          return Text("Wait...");
+        }
+      },
     );
   }
 

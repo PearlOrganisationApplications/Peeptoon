@@ -1,82 +1,51 @@
-class UserDetails {
-  UserDetails({
-    required this.received,
-    required this.filled,
-    required this.data,
-  });
-  late final bool received;
-  late final bool filled;
-  late final Data data;
 
-  UserDetails.fromJson(Map<String, dynamic> json) {
-    received = json['received'];
-    filled = json['filled'];
-    data = Data.fromJson(json['data']);
-  }
 
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['received'] = received;
-    _data['filled'] = filled;
-    _data['data'] = data.toJson();
-    return _data;
-  }
-}
+import 'dart:convert';
 
-class Data {
-  Data({
+GetUserUpdateDetaile getUserUpdateDetaileFromJson(String str) => GetUserUpdateDetaile.fromJson(json.decode(str));
+
+String getUserUpdateDetaileToJson(GetUserUpdateDetaile data) => json.encode(data.toJson());
+
+class GetUserUpdateDetaile {
+  GetUserUpdateDetaile({
     required this.id,
-    required this.userAddress,
-    required this.userPhoneNo,
-    required this.user,
+    required this.name,
+    required this.email,
+    required this.contactNo,
+    required this.address,
+    this.emailVerifiedAt,
+    required this.createdAt,
+    required this.updatedAt,
   });
-  late final int id;
-  late final String userAddress;
-  late final String userPhoneNo;
-  late final User user;
 
-  Data.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    userAddress = json['user_address'];
-    userPhoneNo = json['user_phone_no'];
-    user = User.fromJson(json['user']);
-  }
+  int id;
+  String name;
+  String email;
+  String contactNo;
+  String address;
+  dynamic emailVerifiedAt;
+  DateTime createdAt;
+  DateTime updatedAt;
 
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['user_address'] = userAddress;
-    _data['user_phone_no'] = userPhoneNo;
-    _data['user'] = user.toJson();
-    return _data;
-  }
-}
+  factory GetUserUpdateDetaile.fromJson(Map<String, dynamic> json) => GetUserUpdateDetaile(
+    id: json["id"],
+    name: json["name"],
+    email: json["email"],
+    contactNo: json["contact_no"],
+    address: json["address"],
+    emailVerifiedAt: json["email_verified_at"],
+    createdAt: DateTime.parse(json["created_at"]),
+    updatedAt: DateTime.parse(json["updated_at"]),
+  );
 
-class User {
-  User({
-    required this.id,
-    required this.username,
-    required this.useremail,
-    required this.userpassword,
-  });
-  late final int id;
-  late final String username;
-  late final String useremail;
-  late final String userpassword;
-
-  User.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    username = json['username'];
-    useremail = json['useremail'];
-    userpassword = json['userpassword'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['id'] = id;
-    _data['username'] = username;
-    _data['useremail'] = useremail;
-    _data['userpassword'] = userpassword;
-    return _data;
-  }
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "email": email,
+    "contact_no": contactNo,
+    "address": address,
+    "email_verified_at": emailVerifiedAt,
+    "created_at": createdAt.toIso8601String(),
+    "updated_at": updatedAt.toIso8601String(),
+  };
 }
