@@ -15,6 +15,7 @@ void main() {
 
 class Lava extends StatelessWidget {
   const Lava({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -26,6 +27,7 @@ class Lava extends StatelessWidget {
 
 class Core extends StatelessWidget {
   const Core({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeNotifier>(

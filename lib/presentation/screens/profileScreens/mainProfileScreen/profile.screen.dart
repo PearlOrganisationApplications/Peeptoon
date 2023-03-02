@@ -333,7 +333,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           );
         } else {
-          return Text("Wait...");
+          return Text("Update Info. . . . .");
         }
       },
     );

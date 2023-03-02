@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 class OrderTrackingScreen extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
   PolylinePoints polylinePoints = PolylinePoints();
 
   String googleAPiKey = "AIzaSyCLmi7d9HhYyDKPMK8qZ-zMU8K9lMzKyh8";
-
+  Location currentLiveLocation = Location();
   Set<Marker> markers = Set(); //markers for google map
   Map<PolylineId, Polyline> polylines = {}; //polylines to show direction
 
@@ -21,6 +22,25 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
   LatLng endLocation = LatLng(30.2870, 77.9983);
 
   ///************** Function For Enable Permission, Get Current location ***************///
+
+  ///************** Function For Show Current Location **************///
+
+  void getCurrentLiveLocation() async {
+    var location = await currentLiveLocation.getLocation();
+    currentLiveLocation.onLocationChanged.listen((LocationData Loc) {
+      mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+          target: LatLng(Loc.latitude ?? 0.0, Loc.longitude ?? 0.0),
+          zoom: 12.0)));
+      print(Loc.longitude);
+      print(Loc.latitude);
+      setState(() {
+        markers.add(Marker(
+            markerId: MarkerId('Live Location'),
+            position: LatLng(Loc.latitude ?? 0.0, Loc.longitude ?? 0.0)));
+      });
+    });
+  }
+
   Future<void> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -66,6 +86,8 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
 
   @override
   void initState() {
+    getCurrentLiveLocation();
+
     markers.add(Marker(
       //add start location marker
       markerId: MarkerId(startLocation.toString()),
